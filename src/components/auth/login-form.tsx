@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form"
 import { Form } from "@/components/ui/form"
 import { AuthCard } from "./auth-card"
-import { zodResolver } from './../../../node_modules/@hookform/resolvers/zod/src/zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { LoginSchema } from "../../../types/login-schema";
 import * as z from "zod"
 
