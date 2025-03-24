@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   timestamp,
   pgTable,
@@ -15,7 +16,7 @@ export const users = pgTable("user", {
   email: text("email").unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
-})
+});
  
 export const accounts = pgTable(
   "account",
@@ -41,9 +42,9 @@ export const accounts = pgTable(
       }),
     },
   ]
-)
+);
 
-/*export const chats = pgTable("chat", {
+export const chats = pgTable("chat", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
@@ -64,8 +65,46 @@ export const messages = pgTable("message", {
   content: text("content"),
   image: text("image"), // hmm
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
-});*/
+});
 
 // Drizzle table relation setup
 
-// TODO: This
+export const usersRel = relations(users, ({ one, many }) => {
+  return {
+    accounts: one(accounts),
+    chats: many(chats),
+    messages: many(messages)
+  };
+});
+
+export const accountsRel = relations(accounts, ({ one }) => {
+  return {
+    users: one(users, {
+      fields: [accounts.userId],
+      references: [users.id]
+    })
+  };
+});
+
+export const chatsRel = relations(chats, ({ one, many }) => {
+  return {
+    users: one(users, {
+      fields: [chats.user1Id, chats.user2Id],
+      references: [users.id, users.id]
+    }),
+    messages: many(messages)
+  };
+});
+
+export const messagesRel = relations(messages, ({ one }) => {
+  return {
+    users: one(users, {
+      fields: [messages.senderId],
+      references: [users.id]
+    }),
+    chats: one(chats, {
+      fields: [messages.chatId],
+      references: [chats.id]
+    })
+  };
+});
