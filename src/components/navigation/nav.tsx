@@ -13,7 +13,18 @@ export default async function Nav () {
         <li>
           <Link href={"/"}>Home</Link>
         </li>
-
+        {!session ? (
+          <li>
+            <Button>
+              <Link className="flex gap-x-2 items-center" href="auth/login">
+                <LogIn size={16}/>
+                <div>Login</div>
+              </Link>
+            </Button>
+          </li>
+        ) :
+        <li><UserButton expires={session?.expires ?? ""} user={session?.user}/></li>
+        }
       </ul>
     </nav>
   </header>
