@@ -1,4 +1,3 @@
-import { InferSelectModel } from "drizzle-orm";
 import {
   timestamp,
   pgTable,
@@ -43,30 +42,3 @@ export const accounts = pgTable(
     },
   ]
 )
-
-export const chats = pgTable("chat", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  user1Id: text("user1Id").references(() => users.id, { onDelete: "cascade" }),
-  user2Id: text("user2Id").references(() => users.id, { onDelete: "cascade" }),
-  user1Avatar: text("user1Avatar"),
-  user2Avatar: text("user2Avatar"),
-  lastMessage: text("lastMessage"),
-  lastMessageAt: timestamp("lastMessageAt", { mode: "date" }).defaultNow(),
-});
-
-export const messages = pgTable("message", { 
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  chatId: text("chatId").references(() => chats.id, { onDelete: "cascade" }),
-  senderId: text("senderId").references(() => users.id, { onDelete: "cascade" }),
-  content: text("content"),
-  file: text("file"),
-  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
-});
-
-export type User = InferSelectModel<typeof users>;
-export type Chat = InferSelectModel<typeof chats>;
-export type Message = InferSelectModel<typeof messages>;

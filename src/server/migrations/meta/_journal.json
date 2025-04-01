@@ -15,27 +15,6 @@
       "when": 1740314071089,
       "tag": "0001_tranquil_post",
       "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1742768575400,
-      "tag": "0002_fresh_drax",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1743249354568,
-      "tag": "0003_crazy_warlock",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1743286368885,
-      "tag": "0004_cultured_penance",
-      "breakpoints": true
     }
   ]
 }

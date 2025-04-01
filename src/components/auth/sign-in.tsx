@@ -1,37 +1,23 @@
-"use client"
+import { signIn } from "@/server/auth"
 
+ 
 export function SignIn() {
-
-
   return (
-    <form action={() => undefined} className="flex flex-col gap-4 max-w-sm mx-auto p-6 border rounded-lg shadow-md">
-      <h2 className="text-xl font-semibold">Sign In</h2>
-      
-      {/* {error && <p className="text-red-500 text-sm">{error}</p>} */}
-
-      <label className="flex flex-col gap-1">
+    <form
+      action={async (formData) => {
+        "use server"
+        await signIn("credentials", formData)
+      }}
+    >
+      <label>
         Email
-        <input 
-          name="email" 
-          type="email" 
-          required 
-          className="border p-2 rounded-md"
-        />
+        <input name="email" type="email" />
       </label>
-
-      <label className="flex flex-col gap-1">
+      <label>
         Password
-        <input 
-          name="password" 
-          type="password" 
-          required 
-          className="border p-2 rounded-md"
-        />
+        <input name="password" type="password" />
       </label>
-
-      <button className="bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
-        Sign In
-      </button>
+      <button>Sign In</button>
     </form>
   )
 }

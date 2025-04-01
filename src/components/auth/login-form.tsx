@@ -17,6 +17,7 @@ export const LoginForm = () => {
   })
 
   function onSubmit (values: z.infer<typeof LoginSchema>) {
+    console.log(values)
   }
 
   return (
