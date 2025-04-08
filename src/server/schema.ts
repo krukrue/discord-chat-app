@@ -5,6 +5,7 @@ import {
   text,
   primaryKey,
   integer,
+  boolean,
 } from "drizzle-orm/pg-core"
 import type { AdapterAccountType } from "next-auth/adapters"
  
@@ -16,7 +17,7 @@ export const users = pgTable("user", {
   email: text("email").unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
-})
+});
  
 export const accounts = pgTable(
   "account",
@@ -42,19 +43,39 @@ export const accounts = pgTable(
       }),
     },
   ]
-)
+);
 
 export const chats = pgTable("chat", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   user1Id: text("user1Id").references(() => users.id, { onDelete: "cascade" }),
-  user2Id: text("user2Id").references(() => users.id, { onDelete: "cascade" }),
-  user1Avatar: text("user1Avatar"),
-  user2Avatar: text("user2Avatar"),
   lastMessage: text("lastMessage"),
   lastMessageAt: timestamp("lastMessageAt", { mode: "date" }).defaultNow(),
+  isGroup: boolean("isGroup").notNull().default(false),
 });
+
+export const chatUsers = pgTable(
+  "chat_users",
+  {
+    chatId: text("chatId")
+      .references(() => chats.id, { onDelete: "cascade" })
+      .notNull(),
+    userId: text("userId")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    avatar: text("avatar"),
+    addedAt: timestamp("addedAt", { mode: "date" }).defaultNow(),
+    role: text("role").default("member"),
+  },
+  (chatUserEntry) => [
+    {
+      compoundKey: primaryKey({
+        columns: [chatUserEntry.chatId, chatUserEntry.userId],
+      }),
+    },
+  ]
+);
 
 export const messages = pgTable("message", { 
   id: text("id")
@@ -69,4 +90,5 @@ export const messages = pgTable("message", {
 
 export type User = InferSelectModel<typeof users>;
 export type Chat = InferSelectModel<typeof chats>;
+export type ChatUser = InferSelectModel<typeof chatUsers>;
 export type Message = InferSelectModel<typeof messages>;
