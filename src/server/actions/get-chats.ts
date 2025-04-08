@@ -4,7 +4,6 @@ import { eq, not, and, or, desc } from 'drizzle-orm';
 
 export async function getUserChats(userId: string) {
   // Get all of the user's chats
-  console.log("Getting chats");
   const userChats = await db.select({
     id: chatUsers.chatId,
     isGroup: chats.isGroup,
@@ -15,14 +14,11 @@ export async function getUserChats(userId: string) {
   .leftJoin(chats, eq(chats.id, chatUsers.chatId))
   .where(eq(chatUsers.userId, userId))
   .orderBy(desc(chats.lastMessageAt))
-  console.log("Got basic data");
 
   // Get more data about the chats (other user(s))
   const res = await Promise.all(userChats.map(async (chat) => {
-    console.log("Loop");
     // Is the chat a group chat?
     if (chat.isGroup) {
-      console.log("Group chat");
       //Get other group member names
       const groupUsers = await db.select({name: users.name})
       .from(chatUsers)
@@ -35,7 +31,6 @@ export async function getUserChats(userId: string) {
       )
       .limit(3);
 
-      console.log("Generating group name");
       // If the group has 4+ members, make the name "userB, userC, ...", otherwise "userB and userC"
       // NOTE: If localisation is desirable, this probably shouldn't be here
       var groupName = "";
@@ -46,7 +41,6 @@ export async function getUserChats(userId: string) {
       else // Just in case something breaks
         groupName = "An unnamed group";
       
-      console.log("Returning group chat data");
       return {
         ...chat,
         otherUser: {
@@ -56,7 +50,6 @@ export async function getUserChats(userId: string) {
         }
       };
     } else {
-      console.log("DMs");
       const otherUserId = await db.select({id: chatUsers.userId})
       .from(chatUsers)
       .where(
@@ -66,7 +59,6 @@ export async function getUserChats(userId: string) {
         )
       );
 
-      console.log("Getting data about the 2nd user");
       // Some chats only have one member for some reason (testing?)
       const otherUser = await db.select({
         id: users.id,
@@ -76,7 +68,6 @@ export async function getUserChats(userId: string) {
       .from(users)
       .where(eq(users.id, (otherUserId.length > 0 ? otherUserId[0].id : userId)));
 
-      console.log("Returning data");
       return {
         ...chat,
         otherUser: otherUser[0]
@@ -84,6 +75,5 @@ export async function getUserChats(userId: string) {
     }
   }));
 
-  console.log("Returning final result");
   return res;
 }
