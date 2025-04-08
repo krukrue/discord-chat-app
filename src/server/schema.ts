@@ -5,6 +5,7 @@ import {
   text,
   primaryKey,
   integer,
+  boolean,
 } from "drizzle-orm/pg-core"
 import type { AdapterAccountType } from "next-auth/adapters"
  
@@ -52,8 +53,10 @@ export const chats = pgTable("chat", {
   user2Id: text("user2Id").references(() => users.id, { onDelete: "cascade" }),
   user1Avatar: text("user1Avatar"),
   user2Avatar: text("user2Avatar"),
+  groupAvatar: text("groupAvatar"),
   lastMessage: text("lastMessage"),
   lastMessageAt: timestamp("lastMessageAt", { mode: "date" }).defaultNow(),
+  isGroup: boolean("isGroup").default(false),
 });
 
 export const messages = pgTable("message", { 
@@ -67,6 +70,13 @@ export const messages = pgTable("message", {
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
 });
 
+
+export const chatMembers = pgTable("chat_members", {
+    chatId: text("chatId").references(() => chats.id, { onDelete: "cascade" }),
+    userId: text("userId").references(() => users.id, { onDelete: "cascade" }),
+});
+
 export type User = InferSelectModel<typeof users>;
 export type Chat = InferSelectModel<typeof chats>;
 export type Message = InferSelectModel<typeof messages>;
+export type Member = InferSelectModel<typeof chatMembers>;

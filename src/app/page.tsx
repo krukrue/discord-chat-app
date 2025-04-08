@@ -29,7 +29,8 @@ export default function Home() {
   }, [session]);
 
   return (
-    <div className="flex min-h-screen bg-gray-50 p-8">
+      <div className="flex min-h-screen p-8 bg-gray-50 text-black dark:bg-gray-900 dark:text-white transition-colors">
+
       {error && (
         <div className="bg-red-200 text-red-700 p-4 rounded mb-6">
           <p>{error}</p>

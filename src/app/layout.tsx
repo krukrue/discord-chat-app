@@ -4,6 +4,8 @@ import Nav from "@/components/navigation/nav";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 import { AuthProvider } from "@/components/auth/auth-context";
+import { ThemeProvider } from "@/components/theme/theme-context";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,15 +24,20 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+      <html lang="en">
       <body
-        className={cn(`${geistSans.variable} ${geistMono.variable} antialiased`, "px-6 md:px-12 max-w-7xl mx-auto")}
+          className={cn(
+              `${geistSans.variable} ${geistMono.variable} antialiased`,
+              "px-6 md:px-12 max-w-7xl mx-auto"
+          )}
       >
-        <AuthProvider>
-          <Nav />
-          {children}
-        </AuthProvider>
+      <ThemeProvider>
+          <AuthProvider>
+              <Nav />
+              {children}
+          </AuthProvider>
+      </ThemeProvider>
       </body>
-    </html>
+      </html>
   );
 }

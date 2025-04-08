@@ -6,6 +6,8 @@ export interface ChatType {
   user2Avatar: string | null;
   lastMessage: string | null;
   lastMessageAt: Date | null;
+  isGroup: boolean;
+  groupAvatar?: string | null;
 };
 
 export interface ChatsAndOtherUser extends ChatType {

@@ -10,7 +10,9 @@ export async function getUserChats(userId: string) {
     user1Avatar: chats.user1Avatar,
     user2Avatar: chats.user2Avatar,
     lastMessage: chats.lastMessage,
-    lastMessageAt: chats.lastMessageAt
+    lastMessageAt: chats.lastMessageAt,
+    isGroup: chats.isGroup,
+    groupAvatar: chats.groupAvatar,
   })
   .from(chats)
   .where(or(
@@ -20,6 +22,19 @@ export async function getUserChats(userId: string) {
   .orderBy(desc(chats.lastMessageAt));
 
   const enhancedChats = await Promise.all(userChats.map(async (chat) => {
+
+    if (chat.isGroup) {
+      return {
+        ...chat,
+        otherUser: {
+          id: "group",
+          name: "Group Chat",
+          image: chat.groupAvatar || "/groupchat.png"
+        }
+      };
+    }
+
+
     const otherUserId = chat.user1Id === userId ? chat.user2Id : chat.user1Id;
     
     const otherUser = await db.select({

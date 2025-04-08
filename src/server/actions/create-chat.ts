@@ -1,6 +1,6 @@
-import { or, and, eq } from "drizzle-orm";
+import { or, and, eq, inArray } from "drizzle-orm";
 import { db } from "..";
-import { chats, users } from "../schema";
+import { chats, users, chatMembers } from "../schema";
 
 export async function createChat(user1Id: string, user2Id: string) {
   const existingChat = await db.select({ id: chats.id })
@@ -49,12 +49,59 @@ export async function createChat(user1Id: string, user2Id: string) {
       user2Id,
       user1Avatar: user1[0]?.avatar || null,
       user2Avatar: user2[0]?.avatar || null,
-      lastMessage: "",
+      lastMessage: null,
+      isGroup: false,
     })
     .returning();
 
   return { 
     ...newChat[0],
-    isNew: true 
+    isNew: true,
+    isGroup: false,
+  };
+
+
+}
+
+export async function createGroupChat(userId: string, emails: string[]) {
+  const participants = await db.select({
+    id: users.id,
+    avatar: users.image,
+    name: users.name,
+    email: users.email,
+  })
+      .from(users)
+      .where(inArray(users.email, emails));
+
+  if (participants.length !== emails.length) {
+    throw new Error("Один или несколько пользователей не найдены.");
+  }
+
+  const memberIds = participants.map((p) => p.id);
+
+  const newChat = await db.insert(chats)
+      .values({
+        user1Id: userId,
+        user2Id: null,
+        lastMessage: null,
+        isGroup: true,
+      })
+      .returning();
+
+  const chatId = newChat[0].id;
+
+  await Promise.all([
+    ...memberIds.map((participantId) =>
+        db.insert(chatMembers).values({ chatId, userId: participantId })
+    ),
+    db.insert(chatMembers).values({ chatId, userId }),
+  ]);
+
+  return {
+    ...newChat[0],
+    otherUser: null,
+    isNew: true,
+    isGroup: true,
   };
 }
+
