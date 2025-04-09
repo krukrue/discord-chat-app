@@ -59,15 +59,19 @@ export default function ChatMembersModal({ chatId, open, onClose }: ChatMembersM
                 setError("Неверный формат email");
                 return;
             }
-            // Допустим, POST /api/chats/{chatId}/members
             const { data } = await axios.post(`/api/chats/${chatId}/members`, {
                 email: newEmail,
             });
             setMembers((prev) => [...prev, data]);
             setNewEmail("");
-        } catch (err) {
-            setError("Ошибка при добавлении участника");
-            console.error(err);
+        } catch (err: any) {
+            if (err.response?.status === 409) {
+                setError("Этот пользователь уже в чате");
+            } else if (err.response?.status === 400) {
+                setError("Не корректный email или недопустимая операция");
+            } else {
+                setError("Ошибка при добавлении участника");
+            }
         }
     };
 
