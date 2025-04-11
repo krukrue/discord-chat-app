@@ -43,7 +43,10 @@ export default function Home() {
           <ChatList chats={chats} onSelectChat={setSelectedChat} />
 
           {/* Окно чата (правая часть) */}
-          {selectedChat && <ChatWindow chat={selectedChat} />}
+          {selectedChat && <ChatWindow
+                chat={selectedChat}
+                onCloseChat={() => setSelectedChat(null)}
+              />}
         </>
       ) : (
         <p className="text-center text-gray-500 w-full">You need to sign in to see your chats.</p>

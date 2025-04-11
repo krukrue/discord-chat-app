@@ -140,7 +140,7 @@ export default function ChatCreate({ onCreateChat }: ChatCreateProps) {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Write email of user"
-                    className="p-2 border rounded-lg"
+                    className="p-2 border rounded-lg bg-white text-black dark:bg-gray-800 dark:text-white"
                 />
             )}
 
@@ -151,7 +151,7 @@ export default function ChatCreate({ onCreateChat }: ChatCreateProps) {
                     {participants.length > 0 && (
                         <ul className="mb-2">
                           {participants.map((p, i) => (
-                              <li key={i} className="text-sm text-gray-700">
+                              <li key={i} className="text-sm text-gray-700 dark:text-gray-300">
                                 {i + 1}. {p}
                               </li>
                           ))}
@@ -165,12 +165,12 @@ export default function ChatCreate({ onCreateChat }: ChatCreateProps) {
                         value={tempEmail}
                         onChange={(e) => setTempEmail(e.target.value)}
                         placeholder="Add participant email"
-                        className="p-2 border rounded-lg flex-1"
+                        className="p-2 border rounded-lg flex-1 bg-white text-black dark:bg-gray-800 dark:text-white"
                     />
                     <button
                         type="button"
                         onClick={handleAddParticipant}
-                        className="bg-gray-200 py-1 px-3 rounded"
+                        className="bg-gray-200 py-1 px-3 rounded text-black hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
                     >
                       + Add participant
                     </button>
@@ -181,7 +181,7 @@ export default function ChatCreate({ onCreateChat }: ChatCreateProps) {
             {error && <p className="text-red-500">{error}</p>}
 
             <button
-                className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+                className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 dark:hover:bg-blue-700"
                 onClick={handleCreateChat}
             >
               Add

@@ -17,7 +17,8 @@ export async function createChat(user1Id: string, user2Id: string) {
     return { 
       message: "Чат уже существует", 
       chatId: existingChat[0].id, 
-      isNew: false 
+      isNew: false,
+      isGroup: false,
     };
   }
 
@@ -81,7 +82,8 @@ export async function createGroupChat(userId: string, emails: string[]) {
 
   const newChat = await db.insert(chats)
       .values({
-        user1Id: userId,
+
+        user1Id: null,
         user2Id: null,
         lastMessage: null,
         isGroup: true,
@@ -90,12 +92,17 @@ export async function createGroupChat(userId: string, emails: string[]) {
 
   const chatId = newChat[0].id;
 
-  await Promise.all([
+
+  const inserts = [
     ...memberIds.map((participantId) =>
         db.insert(chatMembers).values({ chatId, userId: participantId })
     ),
-    db.insert(chatMembers).values({ chatId, userId }),
-  ]);
+    ...(memberIds.includes(userId) ? [] : [
+      db.insert(chatMembers).values({ chatId, userId })
+    ])
+  ];
+
+  await Promise.all(inserts);
 
   return {
     ...newChat[0],
