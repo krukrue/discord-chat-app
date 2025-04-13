@@ -36,6 +36,41 @@
       "when": 1743286368885,
       "tag": "0004_cultured_penance",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1744575699505,
+      "tag": "0005_illegal_garia",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1744576360336,
+      "tag": "0006_young_paladin",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1744576448824,
+      "tag": "0007_zippy_silver_centurion",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1744576604358,
+      "tag": "0008_solid_infant_terrible",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1744583085170,
+      "tag": "0009_goofy_corsair",
+      "breakpoints": true
     }
   ]
 }

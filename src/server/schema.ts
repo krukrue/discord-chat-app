@@ -76,7 +76,37 @@ export const chatMembers = pgTable("chat_members", {
     userId: text("userId").references(() => users.id, { onDelete: "cascade" }),
 });
 
+
+export const group = pgTable("group", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text("name"),
+  private: boolean("private"),
+  creatorId: text("userId").references(() => users.id, { onDelete: "cascade" })
+})
+
+export const feed = pgTable("feed", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  title: text("title"),
+  content: text("content"),
+  autor: text("userId").references(() => users.id, { onDelete: "cascade" }),
+  file: text("file"),
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
+  groupId: text("groupId").references(() => group.id, { onDelete: "cascade" }),
+})
+
+export const userSubscribe = pgTable("userSubscribe", {
+  groupId: text("groupId").references(() => group.id, { onDelete: "cascade" }),
+  userId: text("userId").references(() => users.id, { onDelete: "cascade" }),
+});
+
 export type User = InferSelectModel<typeof users>;
 export type Chat = InferSelectModel<typeof chats>;
 export type Message = InferSelectModel<typeof messages>;
 export type Member = InferSelectModel<typeof chatMembers>;
+export type Feed = InferSelectModel<typeof feed>;
+export type Group = InferSelectModel<typeof group>;
+export type UserSubscribe = InferSelectModel<typeof userSubscribe>;
